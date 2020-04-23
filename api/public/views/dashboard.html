@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIB</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style/style_index.css">
+</head>
+
+<body>
+    <div id="top_menu_div">
+        <ul id="top_menu">
+            <a href="./login.html">
+                <li class="menu_0">Home</li>
+            </a>
+            <a href="./cadastro.html">
+                <li class="menu_1">Cadastro</li>
+            </a>
+            <a href="#">
+                <li class="menu_2">Usuários</li>
+            </a>
+            <a href="./login.html">
+                <li class="menu_3">Log In</li>
+            </a>
+        </ul>
+    </div>
+
+    <h2 style="margin: 10px;">PIB Brasil, Mexico, Canada</h2>
+
+    <div class="chart-container"
+        style="position: relative; left: 50%; transform: translate(-50%);height:80vh; width:80vw">
+        <canvas id="myChart"></canvas>
+    </div>
+    <p style="position: absolute; bottom:0; left: 50%; transform: translate(-50%);">Dados de: <a href="https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation ">https://datahelpdesk.worldbank.org</a></p>
+
+
+    <script>
+        (async function main() {
+
+            var brasil = await httpGet("http://api.worldbank.org/v2/country/br/indicator/NY.GDP.MKTP.CD?format=json")
+            var mexico = await httpGet("http://api.worldbank.org/v2/country/mx/indicator/NY.GDP.MKTP.CD?format=json")
+            var canada = await httpGet("http://api.worldbank.org/v2/country/ca/indicator/NY.GDP.MKTP.CD?format=json")
+
+            const MIN_DATA = 19;
+
+            var labels = [];
+            var pibBR = [];
+            var pibCA = [];
+            var pibMX = [];
+
+            for (let i = 2000; i < 2019; i++) {
+                if (i % 2 == 0) {
+                    labels.push(i);
+                }
+            }
+            for (let i = MIN_DATA; i > 0; i--) {
+                if (i % 2) {
+                    pibBR.push(parseInt(brasil[1][i].value));
+                    pibCA.push(parseInt(canada[1][i].value));
+                    pibMX.push(parseInt(mexico[1][i].value));
+                }
+
+            }
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                            label: 'Brasil',
+                            data: pibBR,
+                            backgroundColor: 'rgba(253, 151, 31, 0.2)',
+                            borderColor: 'rgba(253, 151, 31, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Mexico',
+                            data: pibMX,
+                            backgroundColor: 'rgba(166, 226, 46, 0.2)',
+                            borderColor: 'rgba(166, 226, 46, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Canada',
+                            data: pibCA,
+                            backgroundColor: 'rgba(249, 38, 114, 0.2)',
+                            borderColor: 'rgba(249, 38, 114, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (value, index, values) {
+                                    if (value >= 1000000000 && value < 999999999999) {// Bilhao
+                                        return ('US$' + (value / 1.0e+9).toFixed(1) + " Bilhões").replace('.', ',');;
+                                    }
+                                    if (value >= 1000000000000 && value < 999999999999999) {// trilhao
+                                        return ('US$' + (value / 1.0e+12).toFixed(1) + " Trilhões").replace('.', ',');;
+                                    }
+                                    
+                                }
+                            }
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                var value = tooltipItem.value;
+                                if (value >= 1000000000 && value < 999999999999) {// Bilhao
+                                    return ('US$' + (value / 1.0e+9).toFixed(4) + " Bilhões").replace('.', ',');
+                                }
+                                if (value >= 1000000000000 && value < 999999999999999) {// trilhao
+                                    return ('US$' + (value / 1.0e+12).toFixed(4) + " Trilhões").replace('.', ',');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            function httpGet(theUrl) {
+                return new Promise(function (resolve, reject) {
+                    var xmlHttp = new XMLHttpRequest();
+                    xmlHttp.onreadystatechange = function () {
+                        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                            resolve(JSON.parse(xmlHttp.responseText));
+                    }
+                    xmlHttp.open("GET", theUrl, true);
+                    xmlHttp.send(null);
+                })
+
+            }
+        })();
+
+    </script>
+
+</body>
+
+</html>

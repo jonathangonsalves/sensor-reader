@@ -1,0 +1,143 @@
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+:root{
+	--main-bg-color: #272822;
+	--main-text-color: #F8F8F2;
+	--main-second-text-color: #75715E;
+	--main-border-color: #66D9EF;
+	--main-pink-color: #F92672;
+	--main-orange-color: #FD971F;
+	--main-green-color: #A6E22E;
+}
+
+body{
+	background-color: var(--main-bg-color);
+	font-family: Monospace, sans-serif;
+}
+
+::placeholder{
+	color: var(--main-second-text-color);
+}
+h2{
+	text-align: center;
+	color: var(--main-text-color);
+	background-color: var(--main-bg-color);
+}
+
+p{
+	text-align: center;
+	color: var(--main-text-color);
+	background-color: var(--main-bg-color);
+}
+a {
+	color: var(--main-pink-color);
+	transition: 0.25s;
+}
+a:hover {
+	color: var(--main-border-color);
+}
+
+form{
+	text-align: center;
+	padding: 10px;
+	background-color: var(--main-bg-color);
+	color: var(--main-text-color);
+}
+input[type='checkbox']{
+	display: inline;
+}
+.p_check{
+	display: inline;
+}
+
+#login_area{
+	background-color: #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%); 
+}
+
+input{
+	display: block;
+	padding: 2px;
+	margin: 5px;
+}
+
+input[type='text'], input[type='password'], input[type='email']{
+	border: 0;
+	background: none;
+	display: block;
+	margin: 10px auto;
+	width: 270px;
+	text-align: center;
+	border: 2px solid var(--main-border-color);
+	padding: 10px 10px;
+	outline: none;
+	color: var(--main-text-color);
+	border-radius: 24px;
+	transition: 0.25s;
+}
+
+input[type='submit']{
+	border: 0;
+	background: none;
+	display: inline;
+	margin: 10px auto;
+	text-align: center;
+	border: 2px solid var(--main-orange-color);
+	padding: 14px 40px;
+	outline: none;
+	font-family: Monospace;
+	border-radius: 24px;
+	color: var(--main-text-color);
+	cursor: pointer;
+	transition: 0.25s;
+}
+input[type='text']:focus, input[type='password']:focus, input[type='email']:focus{
+	width: 280px;
+	border-color: var(--main-pink-color);
+	box-shadow: 2px 2px 5px var(--main-pink-color);
+}
+
+input[type='submit']:hover{
+	background-color: var(--main-green-color);
+	color: var(--main-bg-color);
+	box-shadow: 2px 2px 2px var(--main-orange-color);
+}
+
+#top_menu_div{
+	width: 100vw;
+	height: 50px;
+	border-bottom: 1px solid var(--main-second-text-color);
+	color: var(--main-text-color);
+	position: relative;
+}
+#top_menu{
+	height: 100%;
+	text-align: center;
+}
+
+#top_menu a{
+	text-decoration: none;
+	color: var(--main-text-color);
+}
+
+#top_menu_div #top_menu li{
+	width: 150px;
+	height: 100%;
+	list-style: none;
+	float: left;
+	padding: 15px;
+	text-align: center;
+	transition: 0.25s;
+}
+
+#top_menu_div #top_menu li:hover{
+	color: black;
+	background-color: var(--main-second-text-color);
+}
+

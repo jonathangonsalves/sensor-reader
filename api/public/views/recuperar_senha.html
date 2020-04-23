@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Exercicio</title>
+	<link rel="stylesheet" type="text/css" href="style/style_index.css">
+</head>
+<body>
+	<div id="top_menu_div">
+		<ul id="top_menu">
+			<a href="./login.html"><li class="menu_0">Home</li></a>
+			<a href="./cadastro.html"><li class="menu_1">Cadastro</li></a>
+			<a href="#"><li class="menu_2">Usuários</li></a>
+			<a href="./login.html"><li class="menu_3">Log In</li></a>
+		</ul>
+	</div>
+
+	<div id="login_area">
+		<h2>Recuperar senha</h2>
+		<form action="http://localhost:9009/user/recuperar_senha" method="POST">
+			<input id='email' type="email" name="email" placeholder="Digite o e-mail de cadastro">
+			
+			<input id='buttom' type="submit" value="Enviar">
+		</form>
+	</div>
+	<script type="text/javascript" src='./scripts/recuperar_senha.js'></script>
+</body>
+</html>
