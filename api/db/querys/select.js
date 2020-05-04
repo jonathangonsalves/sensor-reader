@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports.selectAll = function () {
     return new Promise(function (resolve, reject) {
-        fs.readFile(path.join(__dirname, "../usersDB.js"), 'utf8', function (err, data) {
+        fs.readFile(path.join(__dirname, "../usersDB.json"), 'utf8', function (err, data) {
             if (err)
                 reject(err);
             resolve(JSON.parse(data));
@@ -13,7 +13,7 @@ module.exports.selectAll = function () {
 
 module.exports.select = function (login, password) {
     return new Promise(async function (resolve, reject) {
-        fs.readFile(path.join(__dirname, "../usersDB.js"), 'utf8', function (err, data) {
+        fs.readFile(path.join(__dirname, "../usersDB.json"), 'utf8', function (err, data) {
             if (err)
                 reject(err);
 

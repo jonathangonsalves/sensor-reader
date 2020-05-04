@@ -1,1 +1,0 @@
-[{"name":"master","login":"master@teste.com","password":"abcd1234","role":0},{"name":"LeoTeste","login":"leo123@leo.com","password":"123456","role":1}]

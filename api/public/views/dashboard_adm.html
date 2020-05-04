@@ -12,14 +12,24 @@
 <body>
     <div id="top_menu_div">
         <ul id="top_menu">
-            <a href="/user/register">
+            <a href="/user/register" id='menu_cadastro'>
                 <li class="menu_1">Cadastro</li>
             </a>
-            <a href="#">
-                <li class="menu_2">Usuários(Montar View)</li>
+            <a href="/user/all" id='menu_usuarios'>
+                <li class="menu_2">Usuários</li>
             </a>
         </ul>
     </div>
+
+    <script>
+        var cadastroURL = document.getElementById('menu_cadastro');
+        var usersURL = document.getElementById('menu_usuarios');
+        var urlParams = new URLSearchParams(window.location.search);
+        var token = urlParams.get('t');
+
+        cadastroURL.href += '?t=' + token;
+        usersURL.href += '?t=' + token;
+    </script>
 
     <h2 style="margin: 10px;">PIB Brasil, Mexico, Canada</h2>
 
