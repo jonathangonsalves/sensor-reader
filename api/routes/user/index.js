@@ -5,7 +5,8 @@ const { user_all,
 		register_page,
 		register_page_su,
 		register_page_err,
-		send_recoverpage } = require('./middleware');
+		send_recoverpage,
+		recover } = require('./middleware');
 
 module.exports = function () {
 	var router = express.Router();
@@ -21,6 +22,8 @@ module.exports = function () {
 	router.post('/register', auth.authToken, user_add);
 
 	router.get('/psw/recover', send_recoverpage);
+	
+	router.post('/psw/recover', recover);
 
 	return router;
 }

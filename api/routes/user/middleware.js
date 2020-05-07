@@ -1,7 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 const { insert } = require('../../db/querys/insert');
-const { select, selectAll} = require('../../db/querys/select');
+const { select_email, selectAll} = require('../../db/querys/select');
+
+const send_email = require('../../tools/email');
 
 module.exports.register_page = function(req, res){
     res.sendFile(path.join(__dirname, '../../public/views/cadastro.html'));
@@ -32,7 +34,22 @@ module.exports.user_add = async function(req, res){
     }
 }
 
-
 module.exports.send_recoverpage = function(req, res){
     res.sendFile(path.join(__dirname, '../../public/views/recuperar_senha.html'));
+}
+
+module.exports.recover = async function(req, res){
+    var email = req.body.email;
+
+    var user = await select_email(email);
+    var msg = "";
+    if (user.status) {
+        msg += "Sua senha: " + user.data.password;
+    } else {
+        msg += "Desculpe não encontramos o seu email em nossos registros";        
+    }
+
+    send_email(email, msg);
+
+    res.redirect('/');
 }

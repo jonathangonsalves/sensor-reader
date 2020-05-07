@@ -14,9 +14,8 @@ submit.addEventListener('click', function (e) {
         errorAlert(emailInput, 'Email invalido!');
     } else {
         errorAlert(emailInput, 0);
-        emailInput.value = '';
         alert("Email com senha enviado!");
-        location.reload();
+        document.getElementById("form").submit();
     }
     
 });

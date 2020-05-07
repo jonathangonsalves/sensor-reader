@@ -10,5 +10,11 @@
         "login": "leo123@leo.com",
         "password": "123456",
         "role": 1
+    },
+    {
+        "name": "Leo Suporte",
+        "login": "lpgsuport@gmail.com",
+        "password": "a123456",
+        "role": 1
     }
 ]
