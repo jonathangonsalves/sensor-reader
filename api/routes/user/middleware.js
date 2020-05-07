@@ -31,3 +31,8 @@ module.exports.user_add = async function(req, res){
         res.redirect('/user/register/err?t=' + req.body.token);
     }
 }
+
+
+module.exports.send_recoverpage = function(req, res){
+    res.sendFile(path.join(__dirname, '../../public/views/recuperar_senha.html'));
+}

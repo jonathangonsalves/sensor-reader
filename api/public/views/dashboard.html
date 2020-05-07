@@ -4,124 +4,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIB</title>
+    <title>Sensors</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style/style_index.css">
 </head>
+<style>
+    .chart-container {
+        display: flex;
+        width: 100vw;
+        flex-direction: row;
+        height: 90vh;
+        align-items: center;
+    }
+
+    #mychart {
+        flex-wrap: nowrap;
+        flex-grow: 1;
+    }
+
+    #mychart2 {
+        flex-wrap: nowrap;
+        flex-grow: 1;
+    }
+</style>
 
 <body>
-    <h2 style="margin: 10px;">PIB Brasil, Mexico, Canada</h2>
+    <h2 style="margin: 10px;">Leitura do Potenciometro e luminozidade</h2>
 
-    <div class="chart-container"
-        style="position: relative; left: 50%; transform: translate(-50%);height:80vh; width:80vw">
-        <canvas id="myChart"></canvas>
+    <div class="chart-container">
+        <div style="width: 50vw;">
+            <canvas id="myChart"></canvas>
+        </div>
+        <div style="width: 50vw;">
+            <canvas id="myChart2"></canvas>
+        </div>
     </div>
-    <p style="position: absolute; bottom:0; left: 50%; transform: translate(-50%);">Dados de: <a href="https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation ">https://datahelpdesk.worldbank.org</a></p>
-
-
     <script>
         (async function main() {
-
-            var brasil = await httpGet("http://api.worldbank.org/v2/country/br/indicator/NY.GDP.MKTP.CD?format=json")
-            var mexico = await httpGet("http://api.worldbank.org/v2/country/mx/indicator/NY.GDP.MKTP.CD?format=json")
-            var canada = await httpGet("http://api.worldbank.org/v2/country/ca/indicator/NY.GDP.MKTP.CD?format=json")
-
-            const MIN_DATA = 19;
-
-            var labels = [];
-            var pibBR = [];
-            var pibCA = [];
-            var pibMX = [];
-
-            for (let i = 2000; i < 2019; i++) {
-                if (i % 2 == 0) {
-                    labels.push(i);
-                }
-            }
-            for (let i = MIN_DATA; i > 0; i--) {
-                if (i % 2) {
-                    pibBR.push(parseInt(brasil[1][i].value));
-                    pibCA.push(parseInt(canada[1][i].value));
-                    pibMX.push(parseInt(mexico[1][i].value));
-                }
-
-            }
-
             var ctx = document.getElementById('myChart').getContext('2d');
+            var data = await httpGet("http://localhost:8080/dashboard/data");
+            console.log(data.pot.values)
+
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
                     datasets: [{
-                            label: 'Brasil',
-                            data: pibBR,
-                            backgroundColor: 'rgba(253, 151, 31, 0.2)',
-                            borderColor: 'rgba(253, 151, 31, 1)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Mexico',
-                            data: pibMX,
-                            backgroundColor: 'rgba(166, 226, 46, 0.2)',
-                            borderColor: 'rgba(166, 226, 46, 1)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Canada',
-                            data: pibCA,
-                            backgroundColor: 'rgba(249, 38, 114, 0.2)',
-                            borderColor: 'rgba(249, 38, 114, 1)',
-                            borderWidth: 1
-                        }
-                    ]
+                        label: 'Potenciometro',
+                        data: data.pot.values,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
                 },
                 options: {
                     scales: {
                         yAxes: [{
                             ticks: {
-                                beginAtZero: true,
-                                callback: function (value, index, values) {
-                                    if (value >= 1000000000 && value < 999999999999) {// Bilhao
-                                        return ('US$' + (value / 1.0e+9).toFixed(1) + " Bilhões").replace('.', ',');;
-                                    }
-                                    if (value >= 1000000000000 && value < 999999999999999) {// trilhao
-                                        return ('US$' + (value / 1.0e+12).toFixed(1) + " Trilhões").replace('.', ',');;
-                                    }
-                                    
-                                }
+                                beginAtZero: true
                             }
                         }]
-                    },
-                    tooltips: {
-                        callbacks: {
-                            label: function (tooltipItem, data) {
-                                var value = tooltipItem.value;
-                                if (value >= 1000000000 && value < 999999999999) {// Bilhao
-                                    return ('US$' + (value / 1.0e+9).toFixed(4) + " Bilhões").replace('.', ',');
-                                }
-                                if (value >= 1000000000000 && value < 999999999999999) {// trilhao
-                                    return ('US$' + (value / 1.0e+12).toFixed(4) + " Trilhões").replace('.', ',');
-                                }
-                            }
-                        }
                     }
                 }
             });
 
-            function httpGet(theUrl) {
-                return new Promise(function (resolve, reject) {
-                    var xmlHttp = new XMLHttpRequest();
-                    xmlHttp.onreadystatechange = function () {
-                        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                            resolve(JSON.parse(xmlHttp.responseText));
+            var ctx2 = document.getElementById('myChart2').getContext('2d');
+            var myChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    datasets: [{
+                        label: 'luminozidade',
+                        data: data.pot.values.reverse(),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
                     }
-                    xmlHttp.open("GET", theUrl, true);
-                    xmlHttp.send(null);
-                })
-
-            }
+                }
+            });
         })();
 
+        function httpGet(theUrl) {
+            return new Promise(function (resolve, reject) {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                        resolve(JSON.parse(xmlHttp.responseText));
+                }
+                xmlHttp.open("GET", theUrl, true);
+                xmlHttp.send(null);
+            })
+        }
     </script>
 
 </body>
