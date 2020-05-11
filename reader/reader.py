@@ -2,13 +2,14 @@ from serial import Serial
 import time, datetime
 import json
 
-# TODO
-# 1. Verificar o porque do delay ao ler os primeiros valores
-# 2. Gravar lista "data" para um aquivo local
 
 class Potenciometro():
     def __init__(self, port):    
         self.port = port
+        self.final = {'sensor_one':{},'sensor_two':{}}
+        self.sensor_one = {}
+        self.sensor_two = {}
+
         try:
             self.ser = Serial(port, 9600)
             print("Conectado com: "+self.ser.portstr)        
@@ -19,9 +20,18 @@ class Potenciometro():
     def read(self):
         return self.ser.readline().decode().rstrip()
 
-    def save(self, final_result):
+    def save(self, sensor, value):
+        self.final = {}
+        if sensor == 1:
+            self.sensor_one[str(datetime.datetime.now())] = value
+        else:
+            self.sensor_two[str(datetime.datetime.now())] = value
+        
+        self.final = {'sensor_one':self.sensor_one,'sensor_two':self.sensor_two}
+
         with open('final.json', 'w') as outfile:
-            json.dump(final_result, outfile)
+            json.dump(self.final, outfile)
+
         return self
 
     def close(self):
@@ -32,12 +42,10 @@ class Potenciometro():
             print("Houve um erro ao fechar a porta. Feche manualmente.")
 
 def main():
-    data =[]
+
     pot = Potenciometro('/dev/ttyACM0')
     time.sleep(2)
 
-    sensor_one = {}
-    sensor_two = {}
     print("Setting up...")
     for i in range(120):
         if i < 50:
@@ -46,21 +54,11 @@ def main():
             val_atual = pot.read()
             #print(val_atual)
             try:
-                if val_atual.startswith("s1"):
-                    data.append(val_atual[4:])
-                    sensor_one[str(datetime.datetime.now())] = val_atual[4:]
-                elif val_atual.startswith("s2"):
-                    data.append(val_atual[4:])
-                    sensor_two[str(datetime.datetime.now())] = val_atual[4:]
-                else:
-                    continue
+                pot.save(1, val_atual[4:]) if val_atual.startswith("s1") else pot.save(2, val_atual[4:])
             except:
-                data.append(" ")
+                continue
             time.sleep(0.1)
 
-    print(data)
-    final = {'sensor_one':sensor_one,'sensor_two':sensor_two}
-    pot.save(final)
     pot.close()
 
 if  __name__ == "__main__":
