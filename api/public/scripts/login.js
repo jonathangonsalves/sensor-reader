@@ -2,10 +2,6 @@ var loginInput = document.getElementById('login');
 var passwordInput = document.getElementById('password');
 var submit = document.getElementById('buttom');
 
-var user = {
-    login: 'master@teste.com',
-    password: 'abcd1234'
-}
 
 submit.addEventListener('click', function(e){
     e.preventDefault();
@@ -32,7 +28,6 @@ submit.addEventListener('click', function(e){
     }
 
     if (valid == 2){
-        window.alert("Login Valido!");
         document.getElementById("form").submit();
     } else {
         errorAlert(loginInput, 'Login invalido');
