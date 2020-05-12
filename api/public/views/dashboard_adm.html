@@ -13,7 +13,7 @@
         display: flex;
         width: 99vw;
         flex-direction: row;
-        height: 88vh;        
+        height: 80vh;        
         align-items: center;
     }
 
@@ -50,6 +50,7 @@
     </script>
 
     <h2 style="margin: 10px;">Leitura dos Sensores</h2>
+    <p>Últimas 15 leituras</p>
 
     <h2 style="bottom: 0; position: absolute; width: 100vw;"><a href="http://localhost:8080/dashboard/data">Todos os valores js lidos</a></h2>
     <div class="chart-container">
@@ -65,6 +66,8 @@
             var ctx = document.getElementById('myChart').getContext('2d');
             var data = await httpGet("http://localhost:8080/dashboard/data");
 
+            var showSize = 15;
+
             for(let i in data.s1.time){
                 data.s1.time[i] = timeConv(Date.parse(data.s1.time[i]));
                 console.log(timeConv(Date.parse(data.s1.time[i])));
@@ -77,10 +80,10 @@
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: data.s1.time.slice(-10),
+                    labels: data.s1.time.slice(-showSize),
                     datasets: [{
                         label: 'Sensor 1',
-                        data: data.s1.values.slice(-10),
+                        data: data.s1.values.slice(-showSize),
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
@@ -101,10 +104,10 @@
             var myChart = new Chart(ctx2, {
                 type: 'bar',
                 data: {
-                    labels: data.s2.time.slice(-10),
+                    labels: data.s2.time.slice(-showSize),
                     datasets: [{
                         label: 'Sensor 2',
-                        data: data.s2.values.slice(-10),
+                        data: data.s2.values.slice(-showSize),
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1

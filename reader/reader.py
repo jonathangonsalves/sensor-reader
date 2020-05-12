@@ -61,16 +61,18 @@ def main():
     time.sleep(2)
 
     print("Setting up...")
-    for i in range(120):
-        if i < 50:
-            val_atual = pot.read()
-        else:
-            val_atual = pot.read()
-            try:
-                pot.save(1, val_atual[4:]) if val_atual.startswith("s1") else pot.save(2, val_atual[4:])
-            except:
-                continue
-            time.sleep(0.1)
+    while True:
+        for i in range(120):
+            if i < 50:
+                val_atual = pot.read()
+            else:
+                val_atual = pot.read()
+                try:
+                    pot.save(1, val_atual[4:]) if val_atual.startswith("s1") else pot.save(2, val_atual[4:])
+                except:
+                    continue
+                time.sleep(0.1)
+        time.sleep(5)
 
     pot.close()
 
