@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require('fs');
-require('../../../valores.txt')
+
 module.exports.send_dashpage = function(req, res){
     if (req.body.decoded.role == 0)
         res.sendFile(path.join(__dirname, '../../public/views/dashboard_adm.html'));
@@ -10,8 +10,9 @@ module.exports.send_dashpage = function(req, res){
 
 module.exports.read_data = async function(req, res, next){
      try{
-        var fileData = await fs.readFileSync(path.join(__dirname, '../../../valores.txt'), 'utf8');
-        req.body.nData = fileData;
+        var filePath = path.join(__dirname, '../../../reader/final.json');
+        var fileData = await fs.readFileSync( filePath, 'utf8');
+        req.body.nData = JSON.parse(fileData);
         next();
     }catch(err){
         console.log(err);
@@ -21,16 +22,25 @@ module.exports.read_data = async function(req, res, next){
 
 module.exports.parse_data = async function(req, res, next){
     var data = {
-        pot:{
-            values: []
+        s1:{
+            values: [],
+            time: []
         },
-        lum: {
-            values: []
-        }
+        s2: {
+            values: [],
+            time: []
+        },
     };
-    var temV = (req.body.nData).split('\n');
-    for(let i in temV){
-        data.pot.values.push(parseInt(temV[i]));
+
+    var temV = (req.body.nData);
+    for (let i in (temV["sensor_one"])){
+        data.s1.values.push(parseInt(temV["sensor_one"][i]));
+        data.s1.time.push(i)
+    }
+
+    for (let i in (temV["sensor_two"])) {
+        data.s2.values.push(parseInt(temV["sensor_two"][i]));
+        data.s2.time.push(i)
     }
 
     req.body.data = data;
