@@ -72,7 +72,7 @@ def main():
                 except:
                     continue
                 time.sleep(0.1)
-        time.sleep(5)
+        time.sleep(10)
 
     pot.close()
 

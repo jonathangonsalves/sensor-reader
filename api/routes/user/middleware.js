@@ -24,7 +24,6 @@ module.exports.user_all = async function(req, res){
 
 module.exports.user_add = async function(req, res){
     var {nome, email, password} = req.body;
-    console.log(req.body)
 
     var stats = await insert(nome, email, password);
     if(stats == 'ok'){

@@ -16,3 +16,4 @@
 
 ![Esquemático](https://imgur.com/V70LDFz)
 
+# [Documentação](/doc/README.md)
